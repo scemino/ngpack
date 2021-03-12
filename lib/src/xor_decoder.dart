@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-class Key {
+class XorKey {
   List<int> magicBytes;
   int multiplier;
 
-  Key(this.magicBytes, this.multiplier);
+  XorKey(this.magicBytes, this.multiplier);
 }
 
 enum KnownKey {
@@ -15,8 +15,8 @@ enum KnownKey {
   Key56ad,
 }
 
-final Keys = <KnownKey, Key>{
-  KnownKey.Key5b6d: Key([
+final Keys = <KnownKey, XorKey>{
+  KnownKey.Key5b6d: XorKey([
     0x4F,
     0xD0,
     0xA0,
@@ -34,7 +34,7 @@ final Keys = <KnownKey, Key>{
     0x31,
     0x93,
   ], 0x6D),
-  KnownKey.Key566d: Key([
+  KnownKey.Key566d: XorKey([
     0x4F,
     0xD0,
     0xA0,
@@ -52,7 +52,7 @@ final Keys = <KnownKey, Key>{
     0x31,
     0x93
   ], 0x6D),
-  KnownKey.Key5bad: Key([
+  KnownKey.Key5bad: XorKey([
     0x4F,
     0xD0,
     0xA0,
@@ -70,7 +70,7 @@ final Keys = <KnownKey, Key>{
     0x31,
     0x93,
   ], 0xAD),
-  KnownKey.Key56ad: Key([
+  KnownKey.Key56ad: XorKey([
     0x4F,
     0xD0,
     0xA0,
@@ -91,7 +91,7 @@ final Keys = <KnownKey, Key>{
 };
 
 class XorDecoder extends Converter<Uint8List, Uint8List> {
-  Key key;
+  XorKey key;
 
   XorDecoder(this.key);
 
@@ -109,7 +109,7 @@ class XorDecoder extends Converter<Uint8List, Uint8List> {
 }
 
 class XorEncoder extends Converter<Uint8List, Uint8List> {
-  Key key;
+  XorKey key;
 
   XorEncoder(this.key);
 

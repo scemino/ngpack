@@ -14,7 +14,7 @@ class GGPackEntry {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    final entry = other as GGPackEntry;
+    final entry = other as GGPackEntry?;
     if (entry == null) return false;
     return entry.filename == filename &&
         entry.offset == offset &&

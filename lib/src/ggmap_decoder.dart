@@ -5,9 +5,9 @@ import 'input_stream.dart';
 import 'markers.dart';
 
 class GGMapDecoder extends Converter<Uint8List, Map<String, dynamic>> {
-  int numKeys;
-  InputStream _input;
-  List<int> _offsets;
+  int? numKeys;
+  late InputStream _input;
+  late List<int> _offsets;
 
   GGMapDecoder();
 

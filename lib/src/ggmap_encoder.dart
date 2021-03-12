@@ -17,7 +17,7 @@ class GGMapEncoder extends Converter<Map<String, dynamic>, Uint8List> {
     return _output.toBytes();
   }
 
-  bool writeValue(Object object) {
+  bool writeValue(Object? object) {
     if (object is num) {
       if (!object.isFinite) return false;
       writeNumber(object);
@@ -43,7 +43,7 @@ class GGMapEncoder extends Converter<Map<String, dynamic>, Uint8List> {
       writeList(object);
       return true;
     }
-    if (object is Map) {
+    if (object is Map<String, dynamic>) {
       writeMap(object);
       return true;
     }
@@ -72,7 +72,7 @@ class GGMapEncoder extends Converter<Map<String, dynamic>, Uint8List> {
     _writeMarker(Markers.Array);
   }
 
-  void writeMap(Map<String,dynamic> dictionary) {
+  void writeMap(Map<String, dynamic> dictionary) {
     _writeMarker(Markers.Dictionary);
     _output.writeInt32(dictionary.length);
     dictionary.forEach((key, value) {
@@ -84,7 +84,7 @@ class GGMapEncoder extends Converter<Map<String, dynamic>, Uint8List> {
 
   void _writeRawString(String string) {
     if (_strings.containsKey(string)) {
-      _output.writeInt32(_strings[string]);
+      _output.writeInt32(_strings[string]!);
       return;
     }
     final offset = _strings.length;
@@ -103,7 +103,7 @@ class GGMapEncoder extends Converter<Map<String, dynamic>, Uint8List> {
     _output.position = plo;
 
     // write offsets
-    final strings = List<String>(_strings.length);
+    final strings = List<String>.filled(_strings.length, '');
     _strings.forEach((key, value) {
       strings[value] = key;
     });

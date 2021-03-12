@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 class InputStream {
-  ByteData data;
+  late ByteData data;
   int offset = 0;
 
   int get position => offset;

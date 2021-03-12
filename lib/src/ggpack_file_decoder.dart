@@ -8,9 +8,9 @@ import 'package:path/path.dart' as path;
 import 'xor_decoder.dart';
 
 class GGPackFileDecoder extends IterableBase<GGPackEntry> {
-  Key key;
-  InputStream _input;
-  List<GGPackEntry> _entries;
+  final XorKey key;
+  late InputStream _input;
+  late List<GGPackEntry> _entries;
 
   GGPackFileDecoder(Uint8List data, this.key) {
     final input = data.buffer.asUint32List(0);
@@ -39,7 +39,6 @@ class GGPackFileDecoder extends IterableBase<GGPackEntry> {
 
   List<int> extract(String name, [bool convert = true]) {
     final entry = _entries.firstWhere((element) => element.filename == name);
-    if (entry == null) return null;
     final bytes = _input.data.buffer.asUint8List(entry.offset, entry.size);
     final decodedData = XorDecoder(key).convert(bytes);
 

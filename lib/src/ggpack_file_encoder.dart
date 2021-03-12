@@ -7,7 +7,7 @@ import 'xor_decoder.dart';
 class GGPackFileEncoder {
   final OutputStream _output = OutputStream();
   final List<Map<String, dynamic>> _entries = <Map<String, dynamic>>[];
-  final Key key;
+  final XorKey key;
   int _offset = 8;
 
   GGPackFileEncoder(this.key) {

@@ -20,7 +20,7 @@ ArgParser createParser() {
             'Extract the files from the pack matching the pattern to the current working directory.');
 }
 
-KnownKey parseKey(String key) {
+KnownKey parseKey(String? key) {
   switch (key) {
     case '56ad':
       return KnownKey.Key56ad;
@@ -49,7 +49,7 @@ void main(List<String> arguments) async {
     final listPattern = argResults['list'];
     final extractPattern = argResults['extract'];
     final bytes = await File(argResults.rest[0]).readAsBytes();
-    final file = GGPackFileDecoder(bytes, Keys[key]);
+    final file = GGPackFileDecoder(bytes, Keys[key]!);
     if (listPattern != null) {
       file.where((e) => Glob(listPattern).matches(e.filename)).forEach(print);
     } else if (extractPattern != null) {
