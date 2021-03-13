@@ -10,7 +10,7 @@ ArgParser createParser() {
     ..addOption('key',
         abbr: 'k',
         help:
-            'Name of the key to decrypt/encrypt the data.\nPossible names: 56ad (default), 5bad, 566d, 5b6d',
+            'Name of the key to decrypt/encrypt the data.\nPossible names: 56ad (default), 5bad, 566d, 5b6d, delores',
         defaultsTo: '56ad')
     ..addOption('list',
         abbr: 'l', help: 'List files in the pack matching the pattern.')
@@ -38,6 +38,12 @@ KnownKey parseKey(String? key) {
   }
 }
 
+void usage(ArgParser parser) {
+  print('usage: ngpack --list|--extract "pattern" [--key key] file');
+  print('');
+  print(parser.usage);
+}
+
 void main(List<String> arguments) async {
   final parser = createParser();
 
@@ -45,6 +51,8 @@ void main(List<String> arguments) async {
     final argResults = parser.parse(arguments);
     if (argResults.rest.isEmpty || !await File(argResults.rest[0]).exists()) {
       print('Please specify a ggpack file');
+      print('');
+      usage(parser);
       return;
     }
 
@@ -64,8 +72,6 @@ void main(List<String> arguments) async {
   } on FormatException catch (e) {
     print(e.message);
     print('');
-    print('usage: ngpack --list|--extract "pattern" --key key file');
-    print('');
-    print(parser.usage);
+    usage(parser);
   }
 }
