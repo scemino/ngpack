@@ -30,6 +30,8 @@ KnownKey parseKey(String? key) {
       return KnownKey.Key566d;
     case '5b6d':
       return KnownKey.Key5b6d;
+      case 'delores':
+      return KnownKey.KeyDelores;
     default:
       throw FormatException('Invalid key, please specify one of the valid keys.');
   }
@@ -61,7 +63,7 @@ void main(List<String> arguments) async {
   } on FormatException catch (e) {
     print(e.message);
     print('');
-    print('usage: ngpack --list|--extract "pattern" file');
+    print('usage: ngpack --list|--extract "pattern" --key key file');
     print('');
     print(parser.usage);
   }
