@@ -4,6 +4,7 @@ import 'package:ngpack/ngpack.dart';
 import 'input_stream.dart';
 import 'markers.dart';
 
+/// A [GGMapDecoder] converts data to a [Map].
 class GGMapDecoder extends Converter<Uint8List, Map<String, dynamic>> {
   int? numKeys;
   late InputStream _input;

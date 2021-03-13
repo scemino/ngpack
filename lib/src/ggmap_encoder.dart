@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'markers.dart';
 import 'output_stream.dart';
 
+/// A [GGMapDecoder] converts a [Map] to a list of bytes.
 class GGMapEncoder extends Converter<Map<String, dynamic>, Uint8List> {
   final OutputStream _output = OutputStream();
   final Map<String, int> _strings = <String, int>{};

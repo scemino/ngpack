@@ -141,6 +141,7 @@ final Keys = <KnownKey, XorKey>{
   ], 0x6D),
 };
 
+/// A [XorDecoder] converts xor encrypted data to data.
 class XorDecoder extends Converter<Uint8List, Uint8List> {
   XorKey key;
 
@@ -159,9 +160,11 @@ class XorDecoder extends Converter<Uint8List, Uint8List> {
   }
 }
 
+/// A [XorEncoder] converts data to xor encrypted data.
 class XorEncoder extends Converter<Uint8List, Uint8List> {
   XorKey key;
 
+  /// Creates a [XorEncoder] with a given [key].
   XorEncoder(this.key);
 
   @override

@@ -4100,6 +4100,7 @@ const _bnutKey = [
   0x39,
 ];
 
+/// A [BnutDecoder] converts bnut encoded data to utf8 bytes representing Squirrel code (.nut extension).
 class BnutDecoder extends Converter<Uint8List, Uint8List> {
   @override
   Uint8List convert(Uint8List data) {
