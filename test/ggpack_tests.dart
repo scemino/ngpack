@@ -67,4 +67,9 @@ void main() {
     final content = utf8.decode(decoder.extract('hello.txt'));
     expect(content, equals('hello world'));
   });
+  test('bnutDecode', () {
+    final data = [0x63,0xca,0x67,0x6f,0x23,0x4e];
+    final decoded = utf8.decode(BnutDecoder().convert(Uint8List.fromList(data)));
+    expect(decoded, equals('secret'));
+  });
 }

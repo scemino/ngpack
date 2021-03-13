@@ -1,5 +1,6 @@
 library ngpack;
 
+export 'src/bnut_decoder.dart';
 export 'src/ggmap_decoder.dart';
 export 'src/ggmap_encoder.dart';
 export 'src/ggpack_entry.dart';

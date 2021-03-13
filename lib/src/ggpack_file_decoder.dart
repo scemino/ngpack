@@ -4,8 +4,9 @@ import 'dart:typed_data';
 import 'ggmap_decoder.dart';
 import 'ggpack_entry.dart';
 import 'input_stream.dart';
-import 'package:path/path.dart' as path;
 import 'xor_decoder.dart';
+import 'package:path/path.dart' as path;
+import 'package:ngpack/src/bnut_decoder.dart';
 
 class GGPackFileDecoder extends IterableBase<GGPackEntry> {
   final XorKey key;
@@ -42,10 +43,16 @@ class GGPackFileDecoder extends IterableBase<GGPackEntry> {
     final bytes = _input.data.buffer.asUint8List(entry.offset, entry.size);
     final decodedData = XorDecoder(key).convert(bytes);
 
-    if (path.extension(name).toLowerCase() == '.wimpy' && convert) {
+    if (!convert) return decodedData;
+
+    final ext = path.extension(name).toLowerCase();
+    if (ext == '.wimpy') {
       final wimpy = GGMapDecoder().convert(decodedData);
       final jObject = JsonEncoder.withIndent('  ').convert(wimpy);
       return utf8.encode(jObject);
+    } 
+    if (ext == '.bnut') {
+      return BnutDecoder().convert(decodedData);
     }
     return decodedData;
   }
