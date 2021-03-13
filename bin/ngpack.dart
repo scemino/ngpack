@@ -30,10 +30,11 @@ KnownKey parseKey(String? key) {
       return KnownKey.Key566d;
     case '5b6d':
       return KnownKey.Key5b6d;
-      case 'delores':
+    case 'delores':
       return KnownKey.KeyDelores;
     default:
-      throw FormatException('Invalid key, please specify one of the valid keys.');
+      throw FormatException(
+          'Invalid key, please specify one of the valid keys.');
   }
 }
 

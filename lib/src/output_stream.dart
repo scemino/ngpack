@@ -18,7 +18,7 @@ class OutputStream {
   int get length => _length;
 
   OutputStream();
-  
+
   void writeInt32(int value) {
     writeUint8((value) & 0xff);
     writeUint8((value >> 8) & 0xff);

@@ -50,7 +50,7 @@ class GGPackFileDecoder extends IterableBase<GGPackEntry> {
       final wimpy = GGMapDecoder().convert(decodedData);
       final jObject = JsonEncoder.withIndent('  ').convert(wimpy);
       return utf8.encode(jObject);
-    } 
+    }
     if (ext == '.bnut') {
       return BnutDecoder().convert(decodedData);
     }

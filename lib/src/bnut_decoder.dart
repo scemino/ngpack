@@ -4101,7 +4101,6 @@ const _bnutKey = [
 ];
 
 class BnutDecoder extends Converter<Uint8List, Uint8List> {
-
   @override
   Uint8List convert(Uint8List data) {
     var offset = data.length & 255;
