@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'ggmap_decoder.dart';
 import 'ggpack_entry.dart';
@@ -33,10 +34,23 @@ class GGPackFileDecoder extends IterableBase<GGPackEntry> {
     _input = InputStream(ByteData.sublistView(data));
   }
 
+  factory GGPackFileDecoder.fromFile(String path, XorKey key) {
+    final bytes = File(path).readAsBytesSync();
+    return GGPackFileDecoder(bytes, key);
+  }
+
   GGPackEntry operator [](int index) => _entries[index];
 
   @override
   Iterator<GGPackEntry> get iterator => _entries.iterator;
+
+  String extractContent(String name) {
+    return utf8.decode(Uint8List.fromList(extract(name)));
+  }
+
+  Map<String, dynamic> extractMap(String name) {
+    return json.decode(utf8.decode(Uint8List.fromList(extract(name))));
+  }
 
   List<int> extract(String name, [bool convert = true]) {
     final entry = _entries.firstWhere((element) => element.filename == name);

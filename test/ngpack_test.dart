@@ -53,7 +53,7 @@ void main() {
   });
   test('ggpackEncode', () {
     final encoder = GGPackFileEncoder(Keys[KnownKey.Key56ad]!)
-      ..addFile('hello.txt', Uint8List.fromList('hello world'.codeUnits))
+      ..addContent('hello.txt', 'hello world')
       ..close();
     final actual = encoder.toBytes();
     final expected = File('test/ggpackEncoded.ggpack').readAsBytesSync();

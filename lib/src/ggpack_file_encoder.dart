@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'ggmap_encoder.dart';
@@ -15,7 +16,7 @@ class GGPackFileEncoder {
     _output.writeInt32(0);
   }
 
-  void addFile(String name, Uint8List buffer) {
+  void addBytes(String name, Uint8List buffer) {
     final bytes = XorEncoder(key).convert(buffer);
     var entry = {
       'filename': name,
@@ -25,6 +26,18 @@ class GGPackFileEncoder {
     _output.writeBytes(bytes);
     _offset += buffer.lengthInBytes;
     _entries.add(entry);
+  }
+
+  void addContent(String name, String content) {
+    addBytes(name, Uint8List.fromList(content.codeUnits));
+  }
+
+  void addFile(String name, String path) {
+    addBytes(name, File(path).readAsBytesSync());
+  }
+
+  void addMap(String name, Map<String, dynamic> map) {
+    addBytes(name, GGMapEncoder().convert(map));
   }
 
   Uint8List toBytes() => _output.toBytes();
