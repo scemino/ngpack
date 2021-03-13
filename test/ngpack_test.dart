@@ -8,15 +8,14 @@ void main() {
   test('xorEncode', () {
     final data = 'hello world';
     final bytes = Uint8List.fromList(data.codeUnits);
-    final actual = XorEncoder(Keys[KnownKey.Key5b6d]!).convert(bytes).toList();
+    final actual = XorCodec(Keys[KnownKey.Key5b6d]!).encode(bytes);
     final expected = [44, 187, 16, 237, 151, 51, 9, 79, 216, 227, 44];
-    expect(actual, equals(expected));
+    expect(actual, containsAllInOrder(expected));
   });
   test('xorDecode', () {
     final data =
         Uint8List.fromList([44, 187, 16, 237, 151, 51, 9, 79, 216, 227, 44]);
-    final actual =
-        utf8.decode(XorDecoder(Keys[KnownKey.Key5b6d]!).convert(data));
+    final actual = utf8.decode(XorCodec(Keys[KnownKey.Key5b6d]!).decode(data));
     expect(actual, equals('hello world'));
   });
   test('mapEncode', () {
@@ -31,13 +30,13 @@ void main() {
         {'key': 'value'}
       ]
     };
-    final actual = GGMapEncoder().convert(data).toList();
-    final expected = File('test/mapEncoded').readAsBytesSync().toList();
-    expect(actual, equals(expected));
+    final actual = ggmap.encode(data);
+    final expected = File('test/mapEncoded').readAsBytesSync();
+    expect(actual, containsAllInOrder(expected));
   });
   test('mapDecode', () {
     final data = File('test/mapEncoded').readAsBytesSync();
-    final actual = GGMapDecoder().convert(data);
+    final actual = GGMapCodec().decode(data);
     final expected = {
       'integer': 5,
       'array': [
@@ -60,17 +59,15 @@ void main() {
     expect(actual, equals(expected));
   });
   test('ggpackDecode', () {
-    final data = File('test/ggpackEncoded.ggpack').readAsBytesSync();
-    final decoder = GGPackFileDecoder(data, Keys[KnownKey.Key56ad]!);
-    final entries = decoder.toList();
-    expect(entries, containsAllInOrder([GGPackEntry('hello.txt', 8, 11)]));
+    final decoder = GGPackFileDecoder.fromFile(
+        'test/ggpackEncoded.ggpack', Keys[KnownKey.Key56ad]!);
+    expect(decoder, containsAllInOrder([GGPackEntry('hello.txt', 8, 11)]));
     final content = utf8.decode(decoder.extract('hello.txt'));
     expect(content, equals('hello world'));
   });
   test('bnutDecode', () {
     final data = [0x63, 0xca, 0x67, 0x6f, 0x23, 0x4e];
-    final decoded =
-        utf8.decode(BnutDecoder().convert(Uint8List.fromList(data)));
+    final decoded = bnut.decode(data);
     expect(decoded, equals('secret'));
   });
 }

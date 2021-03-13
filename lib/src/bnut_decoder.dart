@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 const _bnutKey = [
   0x04,
@@ -4100,15 +4099,66 @@ const _bnutKey = [
   0x39,
 ];
 
-/// A [BnutDecoder] converts bnut encoded data to utf8 bytes representing Squirrel code (.nut extension).
-class BnutDecoder extends Converter<Uint8List, Uint8List> {
+/// A [BnutDecoder] converts bnut bytes data to utf8 bytes representing Squirrel code (.nut extension).
+class BnutDecoder extends Converter<List<int>, String> {
   @override
-  Uint8List convert(Uint8List data) {
+  String convert(List<int> data) {
     var offset = data.length & 255;
-    return Uint8List.fromList(data.map((e) {
+    return utf8.decode(data.map((e) {
       final value = e ^ _bnutKey[offset];
       offset = (offset + 1) % _bnutKey.length;
       return value;
     }).toList());
   }
+}
+
+/// A [BnutEncoder] converts Squirrel code (.nut extension) to bnut bytes data.
+class BnutEncoder extends Converter<String, List<int>> {
+  @override
+  List<int> convert(String data) {
+    var offset = data.length & 255;
+    return data.codeUnits.map((e) {
+      final value = e ^ _bnutKey[offset];
+      offset = (offset + 1) % _bnutKey.length;
+      return value;
+    }).toList();
+  }
+}
+
+/// An instance of the default implementation of the [BnutCodec].
+///
+/// This instance provides a convenient access to the most common bnut
+/// use cases.
+///
+/// Examples:
+/// ```dart
+/// var encoded = bnut.encode('print("hello")');
+/// var decoded = bnut.decode(encoded);
+/// ```
+/// The top-level [bnutEncode] and [bnutDecode] functions may be used instead if
+/// a local variable shadows the [bnut] constant.
+const BnutCodec bnut = BnutCodec();
+
+/// Converts Squirrel code to bytes.
+List<int> bnutEncode(String code) => bnut.encode(code);
+
+/// Converts bytes to Squirrel code.
+String bnutDecode(List<int> data) => bnut.decode(data);
+
+/// A [BnutCodec] encodes String to bnut bytes data and decodes bytes to
+/// Squirrel code (.nut extension).
+///
+/// Examples:
+/// ```dart
+/// var encoded = bnut.encode('print("hello")');
+/// var decoded = bnut.decode(encoded);
+/// ```
+class BnutCodec extends Codec<String, List<int>> {
+  const BnutCodec();
+
+  @override
+  Converter<List<int>, String> get decoder => BnutDecoder();
+
+  @override
+  Converter<String, List<int>> get encoder => BnutEncoder();
 }

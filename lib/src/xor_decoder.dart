@@ -179,3 +179,17 @@ class XorEncoder extends Converter<Uint8List, Uint8List> {
     return builder.toBytes();
   }
 }
+
+/// A [XorCodec] encodes bytes to xor bytes and decodes xor bytes to
+/// xor bytes.
+class XorCodec extends Codec<Uint8List, Uint8List> {
+  final XorKey key;
+
+  const XorCodec(this.key);
+
+  @override
+  Converter<Uint8List, Uint8List> get decoder => XorDecoder(key);
+
+  @override
+  Converter<Uint8List, Uint8List> get encoder => XorEncoder(key);
+}

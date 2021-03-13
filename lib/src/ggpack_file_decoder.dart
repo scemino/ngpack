@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'ggmap_decoder.dart';
+import 'ggmap_codec.dart';
 import 'ggpack_entry.dart';
 import 'input_stream.dart';
 import 'xor_decoder.dart';
@@ -23,10 +23,10 @@ class GGPackFileDecoder extends IterableBase<GGPackEntry> {
 
     // decode entries
     final entriesData = data.buffer.asUint8List(entriesOffset, entriesSize);
-    final bytes = XorDecoder(key).convert(entriesData);
+    final bytes = XorCodec(key).decode(entriesData);
 
     // read entries as hash
-    final entries = GGMapDecoder().convert(bytes);
+    final entries = ggmap.decode(bytes);
     _entries = <GGPackEntry>[];
     entries['files'].forEach((e) {
       _entries.add(GGPackEntry(e['filename'], e['offset'], e['size']));
@@ -61,18 +61,16 @@ class GGPackFileDecoder extends IterableBase<GGPackEntry> {
   List<int> extract(String name, [bool convert = true]) {
     final entry = _entries.firstWhere((element) => element.filename == name);
     final bytes = _input.data.buffer.asUint8List(entry.offset, entry.size);
-    final decodedData = XorDecoder(key).convert(bytes);
+    final decodedData = XorCodec(key).decode(bytes);
 
     if (!convert) return decodedData;
 
     final ext = path.extension(name).toLowerCase();
     if (ext == '.wimpy') {
-      final wimpy = GGMapDecoder().convert(decodedData);
-      final jObject = JsonEncoder.withIndent('  ').convert(wimpy);
-      return utf8.encode(jObject);
+      return utf8.encode(json.encode(ggmap.decode(decodedData)));
     }
     if (ext == '.bnut') {
-      return BnutDecoder().convert(decodedData);
+      return utf8.encode(bnut.decode(decodedData));
     }
     return decodedData;
   }

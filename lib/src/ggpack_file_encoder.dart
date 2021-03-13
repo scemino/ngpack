@@ -35,7 +35,7 @@ class GGPackFileEncoder {
   void addContent(String name, String content) {
     addBytes(name, Uint8List.fromList(content.codeUnits));
   }
-  
+
   /// Adds an entry [name] with specified [path].
   void addFile(String name, String path) {
     addBytes(name, File(path).readAsBytesSync());
