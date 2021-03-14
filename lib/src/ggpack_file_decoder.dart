@@ -15,8 +15,9 @@ class GGPackFileDecoder extends IterableBase<GGPackEntry> {
   late InputStream _input;
   late List<GGPackEntry> _entries;
 
-  /// Creates a [GGPackFileDecoder] with a [key].
-  GGPackFileDecoder(Uint8List data, this.key) {
+  /// Creates a [GGPackFileDecoder] with an optional [xorKey].
+  GGPackFileDecoder(Uint8List data, {XorKey? xorKey})
+      : key = xorKey ?? detectKey(data) {
     final input = data.buffer.asUint32List(0);
     final entriesOffset = input[0];
     final entriesSize = input[1];
@@ -36,10 +37,29 @@ class GGPackFileDecoder extends IterableBase<GGPackEntry> {
     _input = InputStream(ByteData.sublistView(data));
   }
 
-  /// Creates a [GGPackFileDecoder] from a [path] and a [key].
-  factory GGPackFileDecoder.fromFile(String path, XorKey key) {
+  /// Creates a [GGPackFileDecoder] from a [path] and an optional [xorKey].
+  factory GGPackFileDecoder.fromFile(String path, {XorKey? xorKey}) {
     final bytes = File(path).readAsBytesSync();
-    return GGPackFileDecoder(bytes, key);
+    return GGPackFileDecoder(bytes, xorKey: xorKey);
+  }
+
+  /// Detects the [XorKey] to use to decode this data.
+  static XorKey detectKey(Uint8List data) {
+    final input = data.buffer.asUint32List(0);
+    final entriesOffset = input[0];
+    final entriesSize = input[1];
+
+    // decode entries
+    final entriesData = data.buffer.asUint8List(entriesOffset, entriesSize);
+
+    for (var key in knownXorKeys) {
+      try {
+        final bytes = XorCodec(key).decode(entriesData);
+        ggmap.decode(bytes);
+        return key;
+      } catch (e) {}
+    }
+    throw Exception('Not able to find key for this ggpack.');
   }
 
   GGPackEntry operator [](int index) => _entries[index];

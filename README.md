@@ -4,7 +4,7 @@ A simple command-line application to list or extract files from ggpack files, us
 ## Build & Run
 
 * clone the project: git clone https://github.com/scemino/ngpack.git
-* run: `dart run -l "*.bnut" bin/ngpack.dart *.bnut ThimbleweedPark.ggpack1`
+* run: `dart run bin/ngpack.dart -l "*.bnut" ThimbleweedPark.ggpack1`
 * or  create the executable `dart compile exe bin/ngpack.dart`
 
 That's it
@@ -14,8 +14,8 @@ That's it
 usage: ngpack --list|--extract "pattern" [--key key] file
 
 -k, --key        Name of the key to decrypt/encrypt the data.
-                 Possible names: 56ad (default), 5bad, 566d, 5b6d, delores
-                 (defaults to "56ad")
+                 Possible names: auto (default), 56ad, 5bad, 566d, 5b6d, delores
+                 (defaults to "auto")
 -l, --list       List files in the pack matching the pattern.
 -x, --extract    Extract the files from the pack matching the pattern to the current working directory.
 ```
@@ -30,3 +30,4 @@ This project has been adapted from the awesome projects https://github.com/mrmac
 * Dump wimpy files
 * Deobfuscate bnut files
 * Create a pack
+* Auto-detect xor key used to decode ggpack files

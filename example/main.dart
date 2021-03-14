@@ -2,7 +2,7 @@ import 'package:ngpack/ngpack.dart';
 
 void main(List<String> arguments) {
   // create a ggpack file
-  final key = Keys[KnownKey.Key56ad]!;
+  final key = knownXorKeys.fromId(KnownXorKeyId.Key56ad);
   final encoder = GGPackFileEncoder(key)
     ..addContent('hello.txt', 'hello world')
     ..addMap('hello.wimpy',
@@ -11,7 +11,7 @@ void main(List<String> arguments) {
   final bytes = encoder.toBytes();
 
   // list all the files in it
-  final pack = GGPackFileDecoder(bytes, key);
+  final pack = GGPackFileDecoder(bytes, xorKey: key);
   pack.forEach(print);
 
   // display their content

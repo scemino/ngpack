@@ -8,14 +8,15 @@ void main() {
   test('xorEncode', () {
     final data = 'hello world';
     final bytes = Uint8List.fromList(data.codeUnits);
-    final actual = XorCodec(Keys[KnownKey.Key5b6d]!).encode(bytes);
+    final actual = XorCodec.fromId(KnownXorKeyId.Key5b6d).encode(bytes);
     final expected = [44, 187, 16, 237, 151, 51, 9, 79, 216, 227, 44];
     expect(actual, containsAllInOrder(expected));
   });
   test('xorDecode', () {
     final data =
         Uint8List.fromList([44, 187, 16, 237, 151, 51, 9, 79, 216, 227, 44]);
-    final actual = utf8.decode(XorCodec(Keys[KnownKey.Key5b6d]!).decode(data));
+    final actual =
+        utf8.decode(XorCodec.fromId(KnownXorKeyId.Key5b6d).decode(data));
     expect(actual, equals('hello world'));
   });
   test('mapEncode', () {
@@ -51,16 +52,17 @@ void main() {
     expect(actual, equals(expected));
   });
   test('ggpackEncode', () {
-    final encoder = GGPackFileEncoder(Keys[KnownKey.Key56ad]!)
-      ..addContent('hello.txt', 'hello world')
-      ..close();
+    final encoder =
+        GGPackFileEncoder(knownXorKeys.fromId(KnownXorKeyId.Key56ad))
+          ..addContent('hello.txt', 'hello world')
+          ..close();
     final actual = encoder.toBytes();
     final expected = File('test/ggpackEncoded.ggpack').readAsBytesSync();
     expect(actual, equals(expected));
   });
   test('ggpackDecode', () {
-    final decoder = GGPackFileDecoder.fromFile(
-        'test/ggpackEncoded.ggpack', Keys[KnownKey.Key56ad]!);
+    final decoder = GGPackFileDecoder.fromFile('test/ggpackEncoded.ggpack',
+        xorKey: knownXorKeys.fromId(KnownXorKeyId.Key56ad));
     expect(decoder, containsAllInOrder([GGPackEntry('hello.txt', 8, 11)]));
     final content = utf8.decode(decoder.extract('hello.txt'));
     expect(content, equals('hello world'));
