@@ -11,13 +11,14 @@ That's it
 
 ## Usage
 ```
-usage: ngpack --list|--extract "pattern" [--key key] file
+usage: ngpack --list|--extract|--create "pattern" [--key key] file
 
 -k, --key        Name of the key to decrypt/encrypt the data.
                  Possible names: auto (default), 56ad, 5bad, 566d, 5b6d, delores
                  (defaults to "auto")
--l, --list       List files in the pack matching the pattern.
--x, --extract    Extract the files from the pack matching the pattern to the current working directory.
+-l, --list       List files in the ggpack matching the pattern.
+-x, --extract    Extract the files from the ggpack matching the pattern to the current working directory.
+-c, --create     Create a ggpack from the files matching the pattern.
 ```
 ## Thanks
 This project has been adapted from the awesome projects https://github.com/mrmacete/r2-ggpack and twp-ggdump https://github.com/mstr-/twp-ggdump
