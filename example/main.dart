@@ -3,15 +3,13 @@ import 'package:ngpack/ngpack.dart';
 void main(List<String> arguments) {
   // create a ggpack file
   final key = knownXorKeys.fromId(KnownXorKeyId.Key56ad);
-  final encoder = GGPackFileEncoder(key)
-    ..addContent('hello.txt', 'hello world')
-    ..addMap('hello.wimpy',
-        {'hello': 'world', 'int': 42, 'double': 3.14, 'null': null})
-    ..close();
-  final bytes = encoder.toBytes();
+  final bytes = GGPackBuilder(key)
+      .addContent('hello.txt', 'hello world')
+      .addMap('hello.wimpy',
+          {'hello': 'world', 'int': 42, 'double': 3.14, 'null': null}).build();
 
   // list all the files in it
-  final pack = GGPackFileDecoder(bytes, xorKey: key);
+  final pack = GGPackDecoder(bytes, xorKey: key);
   pack.forEach(print);
 
   // display their content

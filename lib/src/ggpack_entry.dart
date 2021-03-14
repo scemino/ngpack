@@ -1,4 +1,4 @@
-/// Represents an entry in a [GGPackFileDecoder].
+/// Represents an entry in a [GGPackDecoder].
 class GGPackEntry {
   String filename;
   int offset;

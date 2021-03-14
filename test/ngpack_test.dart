@@ -52,16 +52,14 @@ void main() {
     expect(actual, equals(expected));
   });
   test('ggpackEncode', () {
-    final encoder =
-        GGPackFileEncoder(knownXorKeys.fromId(KnownXorKeyId.Key56ad))
-          ..addContent('hello.txt', 'hello world')
-          ..close();
-    final actual = encoder.toBytes();
+    final actual = GGPackBuilder(knownXorKeys.fromId(KnownXorKeyId.Key56ad))
+        .addContent('hello.txt', 'hello world')
+        .build();
     final expected = File('test/ggpackEncoded.ggpack').readAsBytesSync();
     expect(actual, equals(expected));
   });
   test('ggpackDecode', () {
-    final decoder = GGPackFileDecoder.fromFile('test/ggpackEncoded.ggpack',
+    final decoder = GGPackDecoder.fromFile('test/ggpackEncoded.ggpack',
         xorKey: knownXorKeys.fromId(KnownXorKeyId.Key56ad));
     expect(decoder, containsAllInOrder([GGPackEntry('hello.txt', 8, 11)]));
     final content = utf8.decode(decoder.extract('hello.txt'));

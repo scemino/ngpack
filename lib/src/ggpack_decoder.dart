@@ -9,14 +9,14 @@ import 'xor_decoder.dart';
 import 'package:path/path.dart' as path;
 import 'package:ngpack/src/bnut_decoder.dart';
 
-/// A [GGPackFileDecoder] decodes data into a list of entries of type [GGPackEntry].
-class GGPackFileDecoder extends IterableBase<GGPackEntry> {
+/// A [GGPackDecoder] decodes data into a list of entries of type [GGPackEntry].
+class GGPackDecoder extends IterableBase<GGPackEntry> {
   final XorKey key;
   late InputStream _input;
   late List<GGPackEntry> _entries;
 
-  /// Creates a [GGPackFileDecoder] with an optional [xorKey].
-  GGPackFileDecoder(Uint8List data, {XorKey? xorKey})
+  /// Creates a [GGPackDecoder] with an optional [xorKey].
+  GGPackDecoder(Uint8List data, {XorKey? xorKey})
       : key = xorKey ?? detectKey(data) {
     final input = data.buffer.asUint32List(0);
     final entriesOffset = input[0];
@@ -37,10 +37,10 @@ class GGPackFileDecoder extends IterableBase<GGPackEntry> {
     _input = InputStream(ByteData.sublistView(data));
   }
 
-  /// Creates a [GGPackFileDecoder] from a [path] and an optional [xorKey].
-  factory GGPackFileDecoder.fromFile(String path, {XorKey? xorKey}) {
+  /// Creates a [GGPackDecoder] from a [path] and an optional [xorKey].
+  factory GGPackDecoder.fromFile(String path, {XorKey? xorKey}) {
     final bytes = File(path).readAsBytesSync();
-    return GGPackFileDecoder(bytes, xorKey: xorKey);
+    return GGPackDecoder(bytes, xorKey: xorKey);
   }
 
   /// Detects the [XorKey] to use to decode this data.

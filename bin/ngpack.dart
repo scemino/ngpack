@@ -43,7 +43,7 @@ void main(List<String> arguments) async {
         argResults['key'] == 'auto' ? null : knownXorKeys[argResults['key']];
     final listPattern = argResults['list'];
     final extractPattern = argResults['extract'];
-    final file = GGPackFileDecoder(bytes, xorKey: key);
+    final file = GGPackDecoder(bytes, xorKey: key);
     if (listPattern != null) {
       file.where((e) => Glob(listPattern).matches(e.filename)).forEach(print);
     } else if (extractPattern != null) {
