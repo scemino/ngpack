@@ -20,6 +20,22 @@ usage: ngpack --list|--extract|--create "pattern" [--key key] file
 -x, --extract    Extract the files from the ggpack matching the pattern to the current working directory.
 -c, --create     Create a ggpack from the files matching the pattern.
 ```
+
+```
+A tool to convert Thimbleweed Park savegame to json and json to TWP savegame.
+
+Usage: ngsave <command> [arguments]
+
+Global options:
+-h, --help    Print this usage information.
+
+Available commands:
+  fromjson   Convert specified json file to savegame.
+  tojson     Convert specified savegame file to json.
+
+Run "ngsave help <command>" for more information about a command.
+```
+
 ## Thanks
 This project has been adapted from the awesome projects https://github.com/mrmacete/r2-ggpack and twp-ggdump https://github.com/mstr-/twp-ggdump
 
@@ -32,3 +48,5 @@ This project has been adapted from the awesome projects https://github.com/mrmac
 * Deobfuscate bnut files
 * Create a pack
 * Auto-detect xor key used to decode ggpack files
+* Transform TWP savegame to json
+* Transform json to TWP savegame

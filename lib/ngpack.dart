@@ -10,4 +10,6 @@ export 'src/ggpack_builder.dart';
 export 'src/input_stream.dart';
 export 'src/markers.dart';
 export 'src/output_stream.dart';
+export 'src/twp_savegame.dart';
 export 'src/xor_decoder.dart';
+export 'src/xxtea_encoder.dart';

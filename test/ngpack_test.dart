@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:ngpack/ngpack.dart';
+import 'package:ngpack/src/xxtea_encoder.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -69,5 +70,43 @@ void main() {
     final data = [0x63, 0xca, 0x67, 0x6f, 0x23, 0x4e];
     final decoded = bnut.decode(data);
     expect(decoded, equals('secret'));
+  });
+  test('xxteaEncode', () {
+    const key = [0xAEA4EDF3, 0xAFF8332A, 0xB5A2DBB4, 0x9B4BA022];
+    const expected = [
+      0x54,
+      0xC3,
+      0xFB,
+      0xB8,
+      0xF5,
+      0xAA,
+      0x3F,
+      0x3C,
+      0x5B,
+      0x91,
+      0xC3,
+      0x98
+    ];
+    final data = XXTeaCodec(key).encode('hello, world'.codeUnits);
+    expect(data, equals(expected));
+  });
+  test('xxteaDecode', () {
+    const key = [0xAEA4EDF3, 0xAFF8332A, 0xB5A2DBB4, 0x9B4BA022];
+    const data = [
+      0x54,
+      0xC3,
+      0xFB,
+      0xB8,
+      0xF5,
+      0xAA,
+      0x3F,
+      0x3C,
+      0x5B,
+      0x91,
+      0xC3,
+      0x98
+    ];
+    final actual = XXTeaCodec(key).decode(data);
+    expect(actual, equals('hello, world'.codeUnits));
   });
 }

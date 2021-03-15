@@ -57,7 +57,8 @@ class GGPackDecoder extends IterableBase<GGPackEntry> {
         final bytes = XorCodec(key).decode(entriesData);
         ggmap.decode(bytes);
         return key;
-      } catch (e) {}
+        // ignore: empty_catches
+      } on Exception {}
     }
     throw Exception('Not able to find key for this ggpack.');
   }

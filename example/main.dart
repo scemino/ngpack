@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ngpack/ngpack.dart';
 
 void main(List<String> arguments) {
@@ -15,4 +17,12 @@ void main(List<String> arguments) {
   // display their content
   print('hello.txt:' + pack.extractContent('hello.txt'));
   print('hello.wimpy: ' + pack.extractMap('hello.wimpy').toString());
+
+  // read a savegame
+  final savegameBytes = File('savegame1.save').readAsBytesSync();
+  final savedata = savegame.decode(savegameBytes);
+  // move ransome to Mainstreet
+  savedata.map['actors']['ransome']['_roomKey'] = 'MainStreet';
+  // save modifications
+  File('savegame1.save').writeAsBytesSync(savegame.encode(savedata));
 }
