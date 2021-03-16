@@ -57,11 +57,13 @@ This project has been adapted from the awesome projects https://github.com/mrmac
 ## Features
 * Browse all files into the ggpack
 * Search files with globbing
-* Show the content of a file
 * Extract files from the ggpack
-* Dump wimpy files
-* Deobfuscate bnut files
+* Convert wimpy files to json
+* Convert json files to wimpy files
+* Convert bnut files to nut files
+* Convert nut files to bnut files
 * Create a pack
 * Auto-detect xor key used to decode ggpack files
-* Transform TWP savegame to json
-* Transform json to TWP savegame
+* Convert TWP savegame to json
+* Convert json to TWP savegame
+* Read/write TWP achievements
