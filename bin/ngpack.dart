@@ -1,6 +1,6 @@
 library ngpack;
 
-import 'dart:io';
+import 'package:universal_io/io.dart';
 import 'package:args/args.dart';
 import 'package:glob/glob.dart';
 import 'package:path/path.dart' as path;

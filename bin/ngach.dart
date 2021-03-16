@@ -1,6 +1,6 @@
 library ngpack;
 
-import 'dart:io';
+import 'package:universal_io/io.dart';
 import 'package:args/command_runner.dart';
 import 'package:ngpack/ngpack.dart';
 

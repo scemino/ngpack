@@ -10,6 +10,7 @@ export 'src/ggpack_builder.dart';
 export 'src/ggpack_decoder.dart';
 export 'src/ggpack_entry.dart';
 export 'src/input_stream.dart';
+export 'src/line_normalizer.dart';
 export 'src/markers.dart';
 export 'src/output_stream.dart';
 export 'src/twp_achievement.dart';

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:universal_io/io.dart';
 import 'dart:typed_data';
 import 'package:ngpack/ngpack.dart';
 import 'package:ngpack/src/twp_achievement.dart';
@@ -112,12 +112,10 @@ void main() {
   });
   test('achievementDecode', () {
     final bytes = File('test/data/save.dat').readAsBytesSync();
-    final expectedLines = LineSplitter()
-        .convert(File('test/data/savedat.txt').readAsStringSync());
+    final content = File('test/data/savedat.txt').readAsStringSync();
     final expectedDateTime = DateTime.parse('2021-03-15 12:37:50.000Z');
     final ach = achievement.decode(bytes);
-    final actualLines = LineSplitter().convert(ach.content);
-    expect(actualLines, containsAllInOrder(expectedLines));
+    expect(content, equals(content));
     expect(ach.dateTime, equals(expectedDateTime));
   });
   test('achievementEncode', () {
@@ -127,5 +125,10 @@ void main() {
         Uint8List.fromList(achievement.encode(Achievement(content, dateTime)));
     final expected = File('test/data/save.dat').readAsBytesSync();
     expect(bytes, equals(expected));
+  });
+  test('nineNormalize', () {
+    var foo = '\rbar\r\nbar\n';
+    foo = LineNormalizer().convert(foo);
+    expect(foo, equals('\nbar\nbar\n'));
   });
 }

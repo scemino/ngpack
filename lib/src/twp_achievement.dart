@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:ngpack/src/line_normalizer.dart';
+
 import 'checksum_decoder.dart';
 import 'data_checksum_encoder.dart';
 import 'xxtea_encoder.dart';
@@ -45,7 +47,7 @@ class AchievementDecoder extends Converter<List<int>, Achievement> {
 class AchievementEncoder extends Converter<Achievement, List<int>> {
   @override
   List<int> convert(Achievement achievement) {
-    final bytes = achievement.content.codeUnits;
+    final bytes = LineNormalizer().convert(achievement.content).codeUnits;
     final data = DataChecksum(Uint8List.fromList(bytes),
         ChecksumDecoder().convert(bytes), achievement.dateTime);
     return XXTeaCodec(_AchievementKey).encode(dataChecksum.encode(data));
