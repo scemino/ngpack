@@ -112,10 +112,12 @@ void main() {
   });
   test('achievementDecode', () {
     final bytes = File('test/data/save.dat').readAsBytesSync();
-    final expectedContent = File('test/data/savedat.txt').readAsStringSync();
+    final expectedLines = LineSplitter()
+        .convert(File('test/data/savedat.txt').readAsStringSync());
     final expectedDateTime = DateTime.parse('2021-03-15 12:37:50.000Z');
     final ach = achievement.decode(bytes);
-    expect(ach.content, equals(expectedContent));
+    final actualLines = LineSplitter().convert(ach.content);
+    expect(actualLines, containsAllInOrder(expectedLines));
     expect(ach.dateTime, equals(expectedDateTime));
   });
   test('achievementEncode', () {
