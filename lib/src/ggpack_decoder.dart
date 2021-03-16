@@ -2,12 +2,12 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:path/path.dart' as path;
+import 'bnut_decoder.dart';
 import 'ggmap_codec.dart';
 import 'ggpack_entry.dart';
 import 'input_stream.dart';
 import 'xor_decoder.dart';
-import 'package:path/path.dart' as path;
-import 'package:ngpack/src/bnut_decoder.dart';
 
 /// A [GGPackDecoder] decodes data into a list of entries of type [GGPackEntry].
 class GGPackDecoder extends IterableBase<GGPackEntry> {

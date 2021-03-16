@@ -1,0 +1,9 @@
+ACHVisitAllFloors: "[HotelHall11],[HotelHall12],[HotelHall10],[HotelHall9],"
+bootedCount: 128
+bootedOn: 1615811853
+deviceGUID: "81796371-F466-0960-0D75-328F19BD64CB"
+earnedAchievements: "|ACHPart1|ACHPart2|ACHPushMime|ACHRansomeFB"
+heroDustCount: 2
+heroPartCount: 5
+heroRoomCount: 335
+totalDust: 2

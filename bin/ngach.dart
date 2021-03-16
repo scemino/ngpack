@@ -1,51 +1,50 @@
 library ngpack;
 
-import 'dart:convert';
 import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:ngpack/ngpack.dart';
 
-class ToJsonCommand extends Command {
+class ToCommand extends Command {
   @override
-  final name = 'tojson';
+  final name = 'to';
   @override
-  final description = 'Convert specified savegame file to json.';
+  final description = 'Convert specified achievement file to text.';
 
-  ToJsonCommand();
+  ToCommand();
 
   @override
   void run() {
     final fileNames = argResults?.rest;
     if (fileNames == null || fileNames.isEmpty) return;
     final bytes = File(fileNames[0]).readAsBytesSync();
-    final savedata = savegame.decode(bytes);
-    print(JsonEncoder.withIndent('  ').convert(savedata.map));
+    final ach = achievement.decode(bytes);
+    print(ach.content);
   }
 }
 
-class FromJsonCommand extends Command {
+class FromCommand extends Command {
   @override
-  final name = 'fromjson';
+  final name = 'from';
   @override
-  final description = 'Convert specified json file to savegame.';
+  final description = 'Convert specified text file to achievement.';
 
-  FromJsonCommand();
+  FromCommand();
 
   @override
   void run() {
     final fileNames = argResults?.rest;
     if (fileNames == null || fileNames.isEmpty) return;
     final content = File(fileNames[0]).readAsStringSync();
-    final savedata = TwpSavegame(json.decode(content), DateTime.now());
-    stdout.add(savegame.encode(savedata));
+    final data = achievement.encode(Achievement(content, DateTime.now()));
+    stdout.add(data);
   }
 }
 
 void main(List<String> arguments) {
-  CommandRunner('ngsave',
-      'A tool to convert Thimbleweed Park savegame to json and json to TWP savegame.')
-    ..addCommand(ToJsonCommand())
-    ..addCommand(FromJsonCommand())
+  CommandRunner('ngach',
+      'A tool to convert Thimbleweed Park achievement file (save.dat) to text and text to achievement.')
+    ..addCommand(ToCommand())
+    ..addCommand(FromCommand())
     ..run(arguments).catchError((error) {
       if (error is! UsageException) throw error;
       print(error);

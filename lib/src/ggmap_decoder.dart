@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:ngpack/ngpack.dart';
 import 'input_stream.dart';
 import 'markers.dart';
 

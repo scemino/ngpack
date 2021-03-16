@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
-import 'package:ngpack/ngpack.dart';
+import 'ggmap_decoder.dart';
+import 'ggmap_encoder.dart';
 
 /// An instance of the default implementation of the [GGMapCodec].
 ///

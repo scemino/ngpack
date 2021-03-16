@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:ngpack/ngpack.dart';
+import 'package:ngpack/src/twp_achievement.dart';
 import 'package:ngpack/src/xxtea_encoder.dart';
 import 'package:test/test.dart';
 
@@ -33,11 +34,11 @@ void main() {
       ]
     };
     final actual = ggmap.encode(data);
-    final expected = File('test/mapEncoded').readAsBytesSync();
+    final expected = File('test/data/mapEncoded').readAsBytesSync();
     expect(actual, containsAllInOrder(expected));
   });
   test('mapDecode', () {
-    final data = File('test/mapEncoded').readAsBytesSync();
+    final data = File('test/data/mapEncoded').readAsBytesSync();
     final actual = GGMapCodec().decode(data);
     final expected = {
       'integer': 5,
@@ -56,11 +57,11 @@ void main() {
     final actual = GGPackBuilder(knownXorKeys.fromId(KnownXorKeyId.Key56ad))
         .addContent('hello.txt', 'hello world')
         .build();
-    final expected = File('test/ggpackEncoded.ggpack').readAsBytesSync();
+    final expected = File('test/data/ggpackEncoded.ggpack').readAsBytesSync();
     expect(actual, equals(expected));
   });
   test('ggpackDecode', () {
-    final decoder = GGPackDecoder.fromFile('test/ggpackEncoded.ggpack',
+    final decoder = GGPackDecoder.fromFile('test/data/ggpackEncoded.ggpack',
         xorKey: knownXorKeys.fromId(KnownXorKeyId.Key56ad));
     expect(decoder, containsAllInOrder([GGPackEntry('hello.txt', 8, 11)]));
     final content = utf8.decode(decoder.extract('hello.txt'));
@@ -108,5 +109,21 @@ void main() {
     ];
     final actual = XXTeaCodec(key).decode(data);
     expect(actual, equals('hello, world'.codeUnits));
+  });
+  test('achievementDecode', () {
+    final bytes = File('test/data/save.dat').readAsBytesSync();
+    final expectedContent = File('test/data/savedat.txt').readAsStringSync();
+    final expectedDateTime = DateTime.parse('2021-03-15 12:37:50.000Z');
+    final ach = achievement.decode(bytes);
+    expect(ach.content, equals(expectedContent));
+    expect(ach.dateTime, equals(expectedDateTime));
+  });
+  test('achievementEncode', () {
+    final content = File('test/data/savedat.txt').readAsStringSync();
+    final dateTime = DateTime.parse('2021-03-15 12:37:50.000Z');
+    final bytes =
+        Uint8List.fromList(achievement.encode(Achievement(content, dateTime)));
+    final expected = File('test/data/save.dat').readAsBytesSync();
+    expect(bytes, equals(expected));
   });
 }

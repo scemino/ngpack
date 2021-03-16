@@ -36,6 +36,21 @@ Available commands:
 Run "ngsave help <command>" for more information about a command.
 ```
 
+```
+A tool to convert Thimbleweed Park achievement file (save.dat) to text and text to achievement.
+
+Usage: ngach <command> [arguments]
+
+Global options:
+-h, --help    Print this usage information.
+
+Available commands:
+  from   Convert specified text file to achievement.
+  to     Convert specified achievement file to text.
+
+Run "ngach help <command>" for more information about a command.
+```
+
 ## Thanks
 This project has been adapted from the awesome projects https://github.com/mrmacete/r2-ggpack and twp-ggdump https://github.com/mstr-/twp-ggdump
 
