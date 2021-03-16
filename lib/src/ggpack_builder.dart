@@ -1,6 +1,5 @@
-import 'dart:io';
+import 'package:universal_io/io.dart';
 import 'dart:typed_data';
-
 import 'ggmap_codec.dart';
 import 'ggmap_encoder.dart';
 import 'output_stream.dart';

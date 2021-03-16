@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:universal_io/io.dart';
 import 'package:ngpack/ngpack.dart';
 
 void main(List<String> arguments) {
