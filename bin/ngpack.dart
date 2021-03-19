@@ -95,17 +95,19 @@ class CreateCommand extends KeyCommand {
   CreateCommand() : super(keyDefaultTo: '56ad');
 
   @override
-  void run() {
+  Future<void> run() async {
     super.run();
     var builder =
         GGPackBuilder(key ?? knownXorKeys.fromId(KnownXorKeyId.Key56ad));
-    Glob(pattern!).list().where((e) => e is File).forEach((e) {
+    var count = 0;
+    await Glob(pattern!).list().where((e) => e is File).forEach((e) {
+      count++;
       final entry = path.basename(e.path);
-      print('add entry $entry from ${e.path}');
+      stdout.write('\rAdding entry ${e.path.padRight(48)}');
       builder.addFile(entry, e.path);
     });
-    File(filename!).writeAsBytesSync(builder.build());
-    print('${filename!} created.');
+    File(filename!).writeAsBytesSync(builder.build(), flush: true);
+    print('\r${filename!} created with $count entries.'.padRight(72));
   }
 }
 

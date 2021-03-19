@@ -2,6 +2,7 @@
 
 * Fix error when extracting to much files
 * Improve ngpack commands
+* Fix ngpack create does not create valid ggpack
 
 ## 0.0.4
 
