@@ -1,89 +1,123 @@
 library ngpack;
 
+import 'package:args/command_runner.dart';
 import 'package:universal_io/io.dart';
-import 'package:args/args.dart';
 import 'package:glob/glob.dart';
 import 'package:path/path.dart' as path;
 import 'package:glob/list_local_fs.dart';
 import 'package:ngpack/ngpack.dart';
 
-ArgParser createParser() {
-  return ArgParser()
-    ..addOption('key',
-        abbr: 'k',
-        help:
-            'Name of the key to decrypt/encrypt the data.\nPossible names: auto (default), 56ad, 5bad, 566d, 5b6d, delores',
-        defaultsTo: 'auto')
-    ..addOption('list',
-        abbr: 'l', help: 'List files in the ggpack matching the pattern.')
-    ..addOption('extract',
-        abbr: 'x',
-        help:
-            'Extract the files from the ggpack matching the pattern to the current working directory.')
-    ..addOption('create',
-        abbr: 'c',
-        help: 'Create a ggpack from the files matching the pattern.');
-}
+abstract class KeyCommand extends Command {
+  XorKey? key;
+  String? pattern;
+  String? filename;
 
-void usage(ArgParser parser) {
-  print('usage: ngpack --list|--extract|--create "pattern" [--key key] file');
-  print('');
-  print(parser.usage);
-}
+  bool get checkInputExists => true;
 
-bool checkInputFile(ArgParser parser, ArgResults argResults) {
-  if (argResults.rest.isEmpty || !File(argResults.rest[0]).existsSync()) {
-    print('Please specify a ggpack file');
-    print('');
-    usage(parser);
-    return false;
+  KeyCommand({String keyDefaultTo = 'auto'}) {
+    argParser.addOption('key',
+        help: 'Name of the key to decrypt/encrypt the data.\n'
+            'Possible names: auto, 56ad, 5bad, 566d, 5b6d, delores\n',
+        defaultsTo: keyDefaultTo,
+        abbr: 'k');
+
+    argParser.addOption('pattern',
+        help: 'Pattern to use to match entries.', defaultsTo: '*', abbr: 'p');
   }
-  return true;
-}
 
-void main(List<String> arguments) async {
-  final parser = createParser();
+  @override
+  void run() {
+    key =
+        argResults!['key'] == 'auto' ? null : knownXorKeys[argResults!['key']];
+    pattern = argResults!['pattern'];
 
-  try {
-    final argResults = parser.parse(arguments);
-    final key =
-        argResults['key'] == 'auto' ? null : knownXorKeys[argResults['key']];
-    final listPattern = argResults['list'];
-    final extractPattern = argResults['extract'];
-    final createPattern = argResults['create'];
-
-    if (listPattern != null) {
-      if (!checkInputFile(parser, argResults)) return;
-      final file = GGPackDecoder.fromFile(argResults.rest[0], xorKey: key);
-      file.where((e) => Glob(listPattern).matches(e.filename)).forEach(print);
-    } else if (extractPattern != null) {
-      if (!checkInputFile(parser, argResults)) return;
-      final file = GGPackDecoder.fromFile(argResults.rest[0], xorKey: key);
-      final entries =
-          file.where((e) => Glob(extractPattern).matches(e.filename)).toList();
-      var i = 0;
-      entries.forEach((e) {
-        var progress = 100.0 * (++i) / entries.length;
-        final data = file.extract(e.filename);
-        var outFile = File(e.filename);
-        outFile.writeAsBytesSync(data);
-        stdout.write('\rExtracting ${e.filename.padRight(48)} ${progress.toStringAsFixed(1).padLeft(5)}%');
-      });
-      print('\r${entries.length} files extracted'.padRight(64));
-    } else if (createPattern != null) {
-      var builder =
-          GGPackBuilder(key ?? knownXorKeys.fromId(KnownXorKeyId.Key56ad));
-      await Glob(createPattern).list().where((e) => e is File).forEach((e) {
-        final entry = path.basename(e.path);
-        print('add entry $entry from ${e.path}');
-        builder.addFile(entry, e.path);
-      });
-      await File(argResults.rest[0]).writeAsBytes(builder.build());
-      print('${argResults.rest[0]} created.');
+    if (argResults!.rest.isEmpty ||
+        (checkInputExists && !File(argResults!.rest[0]).existsSync())) {
+      throw UsageException('Please specify a ggpack file', usage);
     }
-  } on FormatException catch (e) {
-    print(e.message);
-    print('');
-    usage(parser);
+
+    filename = argResults!.rest[0];
   }
+}
+
+class ListCommand extends KeyCommand {
+  @override
+  final name = 'list';
+  @override
+  final description = 'List files in the ggpack matching the pattern.';
+
+  ListCommand();
+
+  @override
+  void run() {
+    super.run();
+    final file = GGPackDecoder.fromFile(filename!, xorKey: key);
+    file.where((e) => Glob(pattern!).matches(e.filename)).forEach(print);
+  }
+}
+
+class ExtractCommand extends KeyCommand {
+  @override
+  final name = 'extract';
+  @override
+  final description =
+      'Extract the files from the ggpack matching the pattern to the current working directory.';
+
+  ExtractCommand();
+
+  @override
+  void run() {
+    super.run();
+    final file = GGPackDecoder.fromFile(filename!, xorKey: key);
+    final entries =
+        file.where((e) => Glob(pattern!).matches(e.filename)).toList();
+    var i = 0;
+    entries.forEach((e) {
+      var progress = 100.0 * (++i) / entries.length;
+      final data = file.extract(e.filename);
+      var outFile = File(e.filename);
+      outFile.writeAsBytesSync(data);
+      stdout.write(
+          '\rExtracting ${e.filename.padRight(48)} ${progress.toStringAsFixed(1).padLeft(5)}%');
+    });
+    print('\r${entries.length} file(s) extracted'.padRight(72));
+  }
+}
+
+class CreateCommand extends KeyCommand {
+  @override
+  final name = 'create';
+  @override
+  final description = 'Create a ggpack from the files matching the pattern.';
+  @override
+  final bool checkInputExists = false;
+
+  CreateCommand() : super(keyDefaultTo: '56ad');
+
+  @override
+  void run() {
+    super.run();
+    var builder =
+        GGPackBuilder(key ?? knownXorKeys.fromId(KnownXorKeyId.Key56ad));
+    Glob(pattern!).list().where((e) => e is File).forEach((e) {
+      final entry = path.basename(e.path);
+      print('add entry $entry from ${e.path}');
+      builder.addFile(entry, e.path);
+    });
+    File(filename!).writeAsBytesSync(builder.build());
+    print('${filename!} created.');
+  }
+}
+
+void main(List<String> arguments) {
+  CommandRunner(
+      'ngpack', 'A tool to list/extract/create Thimbleweed Park ggpack file.')
+    ..addCommand(ListCommand())
+    ..addCommand(ExtractCommand())
+    ..addCommand(CreateCommand())
+    ..run(arguments).catchError((error) {
+      if (error is! UsageException) throw error;
+      print(error);
+      exit(64); // Exit code 64 indicates a usage error.
+    });
 }

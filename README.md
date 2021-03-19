@@ -11,14 +11,19 @@ That's it
 
 ## Usage
 ```
-usage: ngpack --list|--extract|--create "pattern" [--key key] file
+A tool to list/extract/create Thimbleweed Park ggpack file.
 
--k, --key        Name of the key to decrypt/encrypt the data.
-                 Possible names: auto (default), 56ad, 5bad, 566d, 5b6d, delores
-                 (defaults to "auto")
--l, --list       List files in the ggpack matching the pattern.
--x, --extract    Extract the files from the ggpack matching the pattern to the current working directory.
--c, --create     Create a ggpack from the files matching the pattern.
+Usage: ngpack <command> [arguments]
+
+Global options:
+-h, --help    Print this usage information.
+
+Available commands:
+  create    Create a ggpack from the files matching the pattern.
+  extract   Extract the files from the ggpack matching the pattern to the current working directory.
+  list      List files in the ggpack matching the pattern.
+
+Run "ngpack help <command>" for more information about a command.
 ```
 
 ```
