@@ -1,3 +1,6 @@
+## 0.05
+
+* Fix error when extracting to much files
 ## 0.0.4
 
 * Replace dart:io to universal_io

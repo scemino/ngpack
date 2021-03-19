@@ -1,6 +1,6 @@
 name: ngpack
 description: A simple command-line application to list or extract files from ggpack files.
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/scemino/ngpack
 
 environment:

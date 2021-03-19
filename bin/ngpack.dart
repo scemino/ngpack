@@ -59,10 +59,17 @@ void main(List<String> arguments) async {
     } else if (extractPattern != null) {
       if (!checkInputFile(parser, argResults)) return;
       final file = GGPackDecoder.fromFile(argResults.rest[0], xorKey: key);
-      file.where((e) => Glob(extractPattern).matches(e.filename)).forEach((e) {
+      final entries =
+          file.where((e) => Glob(extractPattern).matches(e.filename)).toList();
+      var i = 0;
+      entries.forEach((e) {
+        var progress = 100.0 * (++i) / entries.length;
         final data = file.extract(e.filename);
-        File(e.filename).writeAsBytes(data);
+        var outFile = File(e.filename);
+        outFile.writeAsBytesSync(data);
+        stdout.write('\rExtracting ${e.filename.padRight(48)} ${progress.toStringAsFixed(1).padLeft(5)}%');
       });
+      print('\r${entries.length} files extracted'.padRight(64));
     } else if (createPattern != null) {
       var builder =
           GGPackBuilder(key ?? knownXorKeys.fromId(KnownXorKeyId.Key56ad));
