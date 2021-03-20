@@ -4099,16 +4099,20 @@ const _bnutKey = [
   0x39,
 ];
 
+List<int> _decode(int cursor, List<int> data) {
+  return data.map((e) {
+    final value = e ^ _bnutKey[cursor];
+    cursor = (cursor + 1) % _bnutKey.length;
+    return value;
+  }).toList();
+}
+
 /// A [BnutDecoder] converts bnut bytes data to utf8 bytes representing Squirrel code (.nut extension).
 class BnutDecoder extends Converter<List<int>, String> {
   @override
   String convert(List<int> data) {
-    var offset = data.length & 255;
-    return utf8.decode(data.map((e) {
-      final value = e ^ _bnutKey[offset];
-      offset = (offset + 1) % _bnutKey.length;
-      return value;
-    }).toList());
+    var cursor = data.length & 255;
+    return utf8.decode(_decode(cursor, data));
   }
 }
 
@@ -4116,12 +4120,9 @@ class BnutDecoder extends Converter<List<int>, String> {
 class BnutEncoder extends Converter<String, List<int>> {
   @override
   List<int> convert(String data) {
-    var offset = data.length & 255;
-    return data.codeUnits.map((e) {
-      final value = e ^ _bnutKey[offset];
-      offset = (offset + 1) % _bnutKey.length;
-      return value;
-    }).toList();
+    final bytes = utf8.encode(data);
+    var cursor = bytes.length & 255;
+    return _decode(cursor, bytes);
   }
 }
 

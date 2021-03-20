@@ -67,10 +67,19 @@ void main() {
     final content = utf8.decode(decoder.extract('hello.txt'));
     expect(content, equals('hello world'));
   });
+  test('bnutEncode', () {
+    final encoded = bnut.encode('secret');
+    expect(encoded, equals([0x63, 0xca, 0x67, 0x6f, 0x23, 0x4e]));
+  });
   test('bnutDecode', () {
     final data = [0x63, 0xca, 0x67, 0x6f, 0x23, 0x4e];
     final decoded = bnut.decode(data);
     expect(decoded, equals('secret'));
+  });
+  test('bnutEncodeDecode', () {
+    final code = 'createTextObject("SentenceFont", "Engge™ is awesome.", ALIGN_CENTER)';
+    final decoded = bnut.decode(bnut.encode(code));
+    expect(decoded, equals(code));
   });
   test('xxteaEncode', () {
     const key = [0xAEA4EDF3, 0xAFF8332A, 0xB5A2DBB4, 0x9B4BA022];
@@ -126,7 +135,7 @@ void main() {
     final expected = File('test/data/save.dat').readAsBytesSync();
     expect(bytes, equals(expected));
   });
-  test('nineNormalize', () {
+  test('lineNormalize', () {
     var foo = '\rbar\r\nbar\n';
     foo = LineNormalizer().convert(foo);
     expect(foo, equals('\nbar\nbar\n'));

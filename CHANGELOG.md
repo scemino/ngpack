@@ -1,8 +1,9 @@
-## 0.05
+## 0.0.5
 
 * Fix error when extracting to much files
 * Improve ngpack commands
 * Fix ngpack create does not create valid ggpack
+* Fix bnut error with some utf8 characters like ™
 
 ## 0.0.4
 

@@ -1,9 +1,13 @@
+import 'dart:convert';
+
+import 'package:ngpack/ngpack.dart';
 import 'package:universal_io/io.dart';
 import 'dart:typed_data';
 import 'ggmap_codec.dart';
 import 'ggmap_encoder.dart';
 import 'output_stream.dart';
 import 'xor_decoder.dart';
+import 'package:path/path.dart' as p;
 
 /// A [GGPackBuilder] encodes a list of entries of type [GGPackEntry] to data.
 class GGPackBuilder {
@@ -39,7 +43,17 @@ class GGPackBuilder {
 
   /// Adds an entry [name] with specified [path].
   GGPackBuilder addFile(String name, String path) {
-    return addBytes(name, File(path).readAsBytesSync());
+    var file = File(path);
+    final ext = p.extension(path).toLowerCase();
+    var data;
+    if (ext == '.bnut') {
+      data = Uint8List.fromList(bnut.encode(file.readAsStringSync()));
+    } else if (ext == '.wimpy') {
+      data = ggmap.encode(json.decode(file.readAsStringSync()));
+    } else {
+      data = file.readAsBytesSync();
+    }
+    return addBytes(name, data);
   }
 
   /// Adds an entry [name] with specified [map].

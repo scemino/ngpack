@@ -23,7 +23,7 @@ class GGMapDecoder extends Converter<Uint8List, Map<String, dynamic>> {
     numKeys = _input.readUint32();
     _offsets = _readPlo(_input);
 
-    _input = InputStream(ByteData.sublistView(Uint8List.fromList(input), 12));
+    _input = InputStream(ByteData.sublistView(input, 12));
 
     return _readHash();
   }
