@@ -56,6 +56,7 @@ class GGPackDecoder extends IterableBase<GGPackEntry> {
       try {
         final bytes = XorCodec(key).decode(entriesData);
         ggmap.decode(bytes);
+        print('$key seems to be the correct XOR key.');
         return key;
         // ignore: empty_catches
       } on Exception {}
@@ -88,7 +89,8 @@ class GGPackDecoder extends IterableBase<GGPackEntry> {
 
     final ext = path.extension(name).toLowerCase();
     if (ext == '.wimpy') {
-      return utf8.encode(json.encode(ggmap.decode(decodedData)));
+      return utf8.encode(
+          JsonEncoder.withIndent('  ').convert(ggmap.decode(decodedData)));
     }
     if (ext == '.bnut') {
       return utf8.encode(bnut.decode(decodedData));

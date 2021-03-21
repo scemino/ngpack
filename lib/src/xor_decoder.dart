@@ -31,14 +31,14 @@ const KnownXorKeys knownXorKeys = KnownXorKeys();
 class KnownXorKeys extends IterableBase<XorKey> {
   final _keys = const <XorKey>[
     XorKey(
-        '5b6d',
+        '56ad',
         [
           0x4F,
           0xD0,
           0xA0,
           0xAC,
           0x4A,
-          0x5B,
+          0x56,
           0xB9,
           0xE5,
           0x93,
@@ -50,7 +50,7 @@ class KnownXorKeys extends IterableBase<XorKey> {
           0x31,
           0x93,
         ],
-        0x6D),
+        0xAD),
     XorKey(
         '566d',
         [
@@ -73,7 +73,7 @@ class KnownXorKeys extends IterableBase<XorKey> {
         ],
         0x6D),
     XorKey(
-        '5bad',
+        '5b6d',
         [
           0x4F,
           0xD0,
@@ -92,16 +92,16 @@ class KnownXorKeys extends IterableBase<XorKey> {
           0x31,
           0x93,
         ],
-        0xAD),
+        0x6D),
     XorKey(
-        '56ad',
+        '5bad',
         [
           0x4F,
           0xD0,
           0xA0,
           0xAC,
           0x4A,
-          0x56,
+          0x5B,
           0xB9,
           0xE5,
           0x93,

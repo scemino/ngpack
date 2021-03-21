@@ -1,3 +1,8 @@
+## 0.0.6
+
+* Indent wimpy files
+* Change XOR keys detection to test newest keys first
+
 ## 0.0.5
 
 * Fix error when extracting to much files

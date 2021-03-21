@@ -4,7 +4,7 @@ A simple command-line application to list or extract files from ggpack files, us
 ## Build & Run
 
 * clone the project: git clone https://github.com/scemino/ngpack.git
-* run: `dart run bin/ngpack.dart -l "*.bnut" ThimbleweedPark.ggpack1`
+* run: `dart run bin/ngpack.dart list -p "*.bnut" ThimbleweedPark.ggpack1`
 * or  create the executable `dart compile exe bin/ngpack.dart`
 
 That's it
